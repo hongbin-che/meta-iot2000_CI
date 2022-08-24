@@ -1,0 +1,51 @@
+
+name: Release_Build_master-new
+
+on:
+  workflow_dispatch:
+  #watch:
+  #  types: started
+  repository_dispatch:
+    types: relase_build
+    
+jobs:
+  iot2000-image:
+    name:  image build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: Build image
+        run: |
+			echo "GITHUB_PATH: ${{github.GITHUB_PATH}}"
+			echo "GITHUB_ACTION_PATH ${{github.GITHUB_ACTION_PATH}}"
+			git reset --hard && git fetch && git checkout master && git pull origin master 
+			wget https://raw.githubusercontent.com/siemens/kas/2.6.2/kas-container &&  chmod a+x kas-container
+			./kas-container build kas-example.yml 
+			./kas-container build kas-sdk-linux-x64.yml 
+			./kas-container build kas-sdk-windows-i586.yml
+			./kas-container build kas-example-rt.yml
+			  
+      - name: Archive build image
+        uses: actions/upload-artifact@v2
+        with:
+          name: iot2000-image
+          path: build/tmp/deploy/images/iot2000/iot2000-example-image-iot2000-*.rootfs.wic
+      - name: Archive linux sdk
+        uses: actions/upload-artifact@v2
+        with:
+          name: iot2000-Linux-sdk
+          path: build/tmp/deploy/sdk/poky-iot2000-glibc-x86_64-*.sh
+	  - name: Archive windows sdk
+        uses: actions/upload-artifact@v2
+        with:
+          name: iot2000-windows-SDK
+          path: build/tmp/deploy/sdk/poky-iot2000-glibc-i686-mingw32-iot2000-example-image-i586-*.tar.xz
+      - name: Archive RT build image
+        uses: actions/upload-artifact@v2
+        with:
+          name: iot2000-RT-image
+          path: build/tmp/deploy/images/iot2000/iot2000-example-image-rt-iot2000-*.rootfs.wic
+          
