@@ -16,6 +16,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          ref: main
+      - name: Free Disk Space
+        uses: ./.github/workflows/free-disk-space
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
           ref: master
       - name: Build image
         run: |
