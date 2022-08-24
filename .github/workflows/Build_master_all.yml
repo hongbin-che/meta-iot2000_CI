@@ -37,7 +37,7 @@ jobs:
         with:
           name: iot2000-Linux-sdk
           path: build/tmp/deploy/sdk/poky-iot2000-glibc-x86_64-*.sh
-	  - name: Archive windows sdk
+      - name: Archive windows sdk
         uses: actions/upload-artifact@v2
         with:
           name: iot2000-windows-SDK
