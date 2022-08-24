@@ -1,0 +1,26 @@
+name: Sync iot2000 repo master
+on:
+  workflow_dispatch:
+  #watch:
+  #  types: started
+  repository_dispatch:
+    types: sync-repo
+jobs:
+  repo-sync:
+    env:
+      PAT: ${{ secrets.iot2000PAT }}
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: sync iot2000 repo
+        uses: repo-sync/github-sync@v2
+        if: env.iot2000PAT
+        with:
+          source_repo: "https://github.com/siemens/meta-iot2000.git"
+          source_branch: "master"
+          destination_branch: "master"
+          github_token: ${{ secrets.iot2000PAT }}
