@@ -1,5 +1,5 @@
 
-name: Release_Build_master-new
+name: Release_Build_master-new_image
 
 on:
   workflow_dispatch:
